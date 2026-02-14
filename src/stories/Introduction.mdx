@@ -1,0 +1,149 @@
+import { Meta, Title, Subtitle } from '@storybook/blocks';
+
+<Meta title="Introduction/Overview" />
+
+<Title>Advanced Components</Title>
+<Subtitle>Complete usage guide with exact props and emits from current code</Subtitle>
+
+This library currently contains:
+`CodeEditor`, `ChatStream`, `ImageToBase64`, `JsonViewer`, `ChartViewer`, and `VoiceInput`.
+
+## Quick Start
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { CodeEditor, ChatStream, ImageToBase64, JsonViewer, ChartViewer, VoiceInput } from '../components';
+
+const code = ref('SELECT * FROM users;');
+const transcript = ref('');
+</script>
+```
+
+## CodeEditor
+
+Interactive code editor with Prism highlighting, language select, copy action, and dark/light toggle.
+
+### Props
+- `modelValue`: `string` (required)
+- `language`: `CodeLanguage` (default: `'javascript'`)
+- `editable`: `boolean` (default: `true`)
+- `showTitle`: `boolean` (default: `true`)
+- `showLineNumbers`: `boolean` (default: `true`)
+- `theme`: `'dark' | 'light'` (default: `'dark'`)
+- `showThemeToggle`: `boolean` (default: `true`)
+- `languageSelection`: `boolean` (default: `false`)
+- `languages`: `CodeLanguage[]` (default: `['javascript', 'typescript', 'json', 'python', 'sql', 'bash', 'html', 'css']`)
+- `tabSpace`: `number` (default: `4`)
+- `placeholder`: `string | undefined` (default: `undefined`)
+
+### Emits
+- `update:modelValue` with `(value: string)`
+- `onCodeLanguageChange` with `(value: string)`
+
+### Example
+```vue
+<CodeEditor v-model="code" language="sql" :languageSelection="true" />
+```
+
+## ChatStream
+
+Markdown renderer with optional fake streaming. Supports text, lists, tables, images, code blocks, and Plotly graph directives.
+
+### Props
+- `markdownData`: `string` (default: `''`)
+- `fakeStreaming`: `boolean` (default: `false`)
+- `streamingSpeed`: `number` (default: `16`)
+- `isStreaming`: `boolean` (default: `false`)
+- `artifacts`: `StreamArtifact[]` (default: `[]`)
+
+### Emits
+- `streamingCompleted`
+- `fakeStreamingCompleted`
+
+### Example
+```vue
+<ChatStream
+  :markdownData="markdownText"
+  :fakeStreaming="true"
+  :streamingSpeed="12"
+  @fakeStreamingCompleted="onDone"
+/>
+```
+
+## ImageToBase64
+
+Image uploader with preview, markdown output, and copy action.
+
+### Props
+- `label`: `string` (default: `'Select Image'`)
+- `maxSize`: `number` (default: `500 * 1024`)
+- `accept`: `string` (default: `'image/*'`)
+- `onConvert`: `(base64String: string) => void` (default: `undefined`)
+
+### Emits
+- `convert` with `(base64String: string)`
+
+### Example
+```vue
+<ImageToBase64 :maxSize="1024 * 1024" @convert="handleBase64" />
+```
+
+## JsonViewer
+
+Recursive JSON viewer for nested objects and arrays.
+
+### Props
+- `defaultValue`: `unknown` (default: `undefined`)
+- `data`: `unknown` (default: `undefined`)
+
+### Emits
+- None
+
+### Example
+```vue
+<JsonViewer :data="{ env: 'prod', retries: 3, features: ['chat', 'charts'] }" />
+```
+
+## ChartViewer
+
+Plotly renderer with loading/error states and resize support.
+
+### Props
+- `data`: `Array<Record<string, unknown>>` (required)
+- `layout`: `Record<string, unknown> | undefined` (default: `undefined`)
+- `config`: `Record<string, unknown> | undefined` (default: `undefined`)
+- `height`: `number` (default: `420`)
+- `debounceMs`: `number` (default: `0`)
+- `useResizeHandler`: `boolean` (default: `true`)
+
+### Emits
+- None
+
+### Example
+```vue
+<ChartViewer :data="series" :layout="{ title: 'Latency Trend' }" :height="360" />
+```
+
+## VoiceInput
+
+Speech-to-text input using browser SpeechRecognition API.
+
+### Props
+- `modelValue`: `string` (required)
+- `disabled`: `boolean` (default: `false`)
+
+### Emits
+- `update:modelValue` with `(value: string)`
+- `start`
+- `stop`
+- `error` with `(message: string)`
+
+### Example
+```vue
+<VoiceInput v-model="transcript" @error="onSpeechError" />
+```
+
+## Notes
+- `VoiceInput` requires browser support for `SpeechRecognition` / `webkitSpeechRecognition`.
+- `ChatStream` graph rendering depends on chart directives matching entries in `artifacts`.
