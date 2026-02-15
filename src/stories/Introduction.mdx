@@ -10,14 +10,53 @@ This library currently contains:
 
 ## Quick Start
 
+### 1) Build and pack this library
+
+```bash
+npm install
+npm run build
+npm pack --cache ./.npm-cache
+```
+
+This generates a tarball like:
+`advanced-components-1.0.1.tgz`
+
+### 2) Install in a target Vue app
+
+From the target app directory:
+
+```bash
+npm install /absolute/path/to/advanced-components-1.0.1.tgz
+```
+
+### 3) Import components and library styles
+
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
-import { CodeEditor, ChatStream, ImageToBase64, JsonViewer, ChartViewer, VoiceInput } from '../components';
+import { CodeEditor, ChatStream, ImageToBase64, JsonViewer, ChartViewer, VoiceInput } from 'advanced-components';
+import 'advanced-components/style.css';
 
 const code = ref('SELECT * FROM users;');
 const transcript = ref('');
 </script>
+```
+
+### 4) Use components
+
+```vue
+<template>
+  <CodeEditor v-model="code" language="sql" />
+  <VoiceInput v-model="transcript" />
+</template>
+```
+
+### Optional: publish to npm/private registry
+
+If you publish `advanced-components`, consumers can install with:
+
+```bash
+npm install advanced-components
 ```
 
 ## CodeEditor
